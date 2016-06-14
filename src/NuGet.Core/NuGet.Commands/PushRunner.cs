@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+using System;
 using System.Threading.Tasks;
 using NuGet.Configuration;
 using NuGet.Common;
@@ -31,12 +34,16 @@ namespace NuGet.Commands
             {
                 timeoutSeconds = 5 * 60;
             }
+            var apikey = CommandRunnerUtility.GetApiKey(settings, source, apiKey);
 
-            PackageUpdateResource packageUpdateResource = await CommandRunnerUtility.GetPackageUpdateResource(sourceProvider, source);
+            var packageUpdateResource = await CommandRunnerUtility.GetPackageUpdateResource(sourceProvider, source);
 
             // only push to SymbolSource when the actual package is being pushed to the official NuGet.org
-            Uri sourceUri = packageUpdateResource.SourceUri;
-            if (string.IsNullOrEmpty(symbolSource) && !noSymbols && !sourceUri.IsFile && sourceUri.IsAbsoluteUri)
+            var sourceUri = packageUpdateResource.SourceUri;
+            if (string.IsNullOrEmpty(symbolSource)
+                && !noSymbols
+                && !sourceUri.IsFile
+                && sourceUri.IsAbsoluteUri)
             {
                 if (sourceUri.Host.Equals(NuGetConstants.NuGetHostName, StringComparison.OrdinalIgnoreCase) // e.g. nuget.org
                     || sourceUri.Host.EndsWith("." + NuGetConstants.NuGetHostName, StringComparison.OrdinalIgnoreCase)) // *.nuget.org, e.g. www.nuget.org
@@ -51,13 +58,19 @@ namespace NuGet.Commands
                 }
             }
 
+            if (!string.IsNullOrEmpty(symbolSource)
+                && string.IsNullOrEmpty(symbolApiKey))
+            {
+                symbolApiKey = CommandRunnerUtility.GetApiKey(settings, symbolSource, apiKey);
+            }
+
             await packageUpdateResource.Push(
                 packagePath,
                 symbolSource,
                 timeoutSeconds,
                 disableBuffering,
-                endpoint => CommandRunnerUtility.GetApiKey(settings, endpoint, apiKey),
-                symbolsEndpoint => CommandRunnerUtility.GetApiKey(settings, symbolsEndpoint, symbolApiKey),
+                apikey,
+                symbolApiKey,
                 logger);
         }
     }

@@ -44,8 +44,8 @@ namespace NuGet.Protocol.Core.Types
             string symbolSource, // empty to not push symbols
             int timeoutInSecond,
             bool disableBuffering,
-            Func<string, string> getApiKey,
-            Func<string, string> getSymbolApiKey,
+            string apiKey,
+            string symbolsApiKey,
             ILogger log)
         {
             // TODO: Figure out how to hook this up with the HTTP request
@@ -56,8 +56,6 @@ namespace NuGet.Protocol.Core.Types
                 var requestTimeout = TimeSpan.FromSeconds(timeoutInSecond);
                 tokenSource.CancelAfter(requestTimeout);
 
-                var apiKey = getApiKey(_source);
-
                 await PushPackage(packagePath, _source, apiKey, requestTimeout, log, tokenSource.Token);
 
                 // symbolSource is only set when:
@@ -65,20 +63,19 @@ namespace NuGet.Protocol.Core.Types
                 // - The package source is nuget.org and the default symbol source is used
                 if (!string.IsNullOrEmpty(symbolSource))
                 {
-                    string symbolApiKey = getSymbolApiKey(symbolSource);
-                    await PushSymbols(packagePath, symbolSource, symbolApiKey, requestTimeout, log, tokenSource.Token);
+                    await PushSymbols(packagePath, symbolSource, symbolsApiKey, requestTimeout, log, tokenSource.Token);
                 }
             }
         }
 
-        public async Task Delete(string packageId,
+        public async Task Delete(
+            string packageId,
             string packageVersion,
-            Func<string, string> getApiKey,
+            string apiKey,
             Func<string, bool> confirm,
             ILogger log)
         {
             var sourceDisplayName = GetSourceDisplayName(_source);
-            var apiKey = getApiKey(_source);
             if (string.IsNullOrEmpty(apiKey) && !IsFileSource())
             {
                 log.LogWarning(string.Format(CultureInfo.CurrentCulture,

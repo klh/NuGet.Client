@@ -48,6 +48,14 @@ namespace NuGet.Commands
                 apiKey = SettingsUtility.GetDecryptedValue(settings, ConfigurationConstants.ApiKeys, source);
             }
 
+            // fallback for a case of nuget.org source
+            // try to find an api key mapped to a default "gallery" url
+            if (apiKey == null
+                && source.IndexOf("nuget.org", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                apiKey = SettingsUtility.GetDecryptedValue(settings, ConfigurationConstants.ApiKeys, NuGetConstants.DefaultGalleryServerUrl);
+            }
+
             return apiKey;
         }
 

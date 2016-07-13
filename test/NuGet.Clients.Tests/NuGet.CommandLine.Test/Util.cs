@@ -243,6 +243,11 @@ namespace NuGet.CommandLine.Test
             }
 
             var fileFullName = Path.Combine(directory, fileName);
+            CreateFile(fileFullName, fileContent);
+        }
+
+        public static void CreateFile(string fileFullName, string fileContent)
+        {
             using (var writer = new StreamWriter(fileFullName))
             {
                 writer.Write(fileContent);

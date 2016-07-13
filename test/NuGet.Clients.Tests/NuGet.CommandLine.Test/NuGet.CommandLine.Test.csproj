@@ -82,6 +82,7 @@
     <Compile Include="NuGetPackCommandTest.cs" />
     <Compile Include="NuGetPushCommandTest.cs" />
     <Compile Include="NuGetRestoreCommandTest.cs" />
+    <Compile Include="NuGetSetApiKeyTests.cs" />
     <Compile Include="NuGetUpdateCommandTests.cs" />
     <Compile Include="PortReserver.cs" />
     <Compile Include="RestoreProjectJsonTest.cs" />

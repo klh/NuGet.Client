@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+using System;
 using System.Threading.Tasks;
 using NuGet.Configuration;
 using NuGet.Protocol;
@@ -49,7 +52,7 @@ namespace NuGet.Commands
             }
 
             // fallback for a case of nuget.org source
-            // try to find an api key mapped to a default "gallery" url
+            // try to retrieve an api key mapped to a default "gallery" url
             if (apiKey == null
                 && source.IndexOf("nuget.org", StringComparison.OrdinalIgnoreCase) >= 0)
             {

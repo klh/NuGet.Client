@@ -116,7 +116,7 @@ Invoke-BuildStep 'Merging NuGet.exe' {
         param($Configuration) Invoke-ILMerge $Configuration
     } `
     -args $Configuration `
-    -skip:($SkipILMerge -or $SkipCSProj -or $Fast) `
+    -skip:($SkipILMerge -or $SkipCSProj) `
     -ev +BuildErrors
 
 popd

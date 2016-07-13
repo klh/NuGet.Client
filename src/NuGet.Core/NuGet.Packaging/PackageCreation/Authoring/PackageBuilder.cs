@@ -507,7 +507,7 @@ namespace NuGet.Packaging
 
             WriteOpcManifestRelationship(package, path, psmdcpPath);
 
-            ZipArchiveEntry entry = package.CreateEntry(path, CompressionLevel.Optimal);
+            ZipArchiveEntry entry = package.CreateEntry(path, CompressionLevel.NoCompression);
 
             using (Stream stream = entry.Open())
             {
@@ -670,7 +670,7 @@ namespace NuGet.Packaging
 
             string entryName = CreatePartEntryName(path);
 
-            var entry = package.CreateEntry(entryName, CompressionLevel.Optimal);
+            var entry = package.CreateEntry(entryName, CompressionLevel.NoCompression);
             using (var stream = entry.Open())
             {
                 sourceStream.CopyTo(stream);
@@ -708,7 +708,7 @@ namespace NuGet.Packaging
 
         private void WriteOpcManifestRelationship(ZipArchive package, string path, string psmdcpPath)
         {
-            ZipArchiveEntry relsEntry = package.CreateEntry("_rels/.rels", CompressionLevel.Optimal);
+            ZipArchiveEntry relsEntry = package.CreateEntry("_rels/.rels", CompressionLevel.NoCompression);
 
             XNamespace relationships = "http://schemas.openxmlformats.org/package/2006/relationships";
 
@@ -735,7 +735,7 @@ namespace NuGet.Packaging
         private static void WriteOpcContentTypes(ZipArchive package, HashSet<string> extensions)
         {
             // OPC backwards compatibility
-            ZipArchiveEntry relsEntry = package.CreateEntry("[Content_Types].xml", CompressionLevel.Optimal);
+            ZipArchiveEntry relsEntry = package.CreateEntry("[Content_Types].xml", CompressionLevel.NoCompression);
 
             XNamespace content = "http://schemas.openxmlformats.org/package/2006/content-types";
             XElement element = new XElement(content + "Types",
@@ -768,7 +768,7 @@ namespace NuGet.Packaging
         // OPC backwards compatibility for package properties
         private void WriteOpcPackageProperties(ZipArchive package, string psmdcpPath)
         {
-            ZipArchiveEntry packageEntry = package.CreateEntry(psmdcpPath, CompressionLevel.Optimal);
+            ZipArchiveEntry packageEntry = package.CreateEntry(psmdcpPath, CompressionLevel.NoCompression);
 
             var dcText = "http://purl.org/dc/elements/1.1/";
             XNamespace dc = dcText;
